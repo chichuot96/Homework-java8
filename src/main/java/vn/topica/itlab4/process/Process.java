@@ -23,7 +23,7 @@ public class Process {
  * Exercise 1: Sumarize of Student each School
  */
 	public static void getAllStudent() {
-
+		System.out.println("Exercise 1:");
 		listSc.stream().forEach(sc->{
 			System.out.println("school name:"+sc.getSchoolName());
 			Optional<Long> a=listCl.stream()
@@ -42,6 +42,7 @@ public class Process {
 	 * Exercise 2: Average mark of Subject in each school
 	 */
 	public static void  averageMark() {
+		System.out.println("Exercise 2:");
 		listSc.stream().forEach(sc->{
 			List<Integer> listStudentId=new ArrayList<>();
 			System.out.println("------ school name:"+sc.getSchoolName());
@@ -73,6 +74,7 @@ public class Process {
 	 * Exercise 3: Get class has max average mark in school
 	 */
 	public static void getMaxAverage() {
+		System.out.println("Exercise 3:");
 		listSc.stream().filter(sc->sc!=null).forEach(sc->{
 			System.out.println("------ school name:"+sc.getSchoolName());
 			ObjReturn obj= listCl.stream()
@@ -103,25 +105,26 @@ public class Process {
 	 * Exercise 4: Get top 10 and bottom 10 student each subject
 	 */
 	public static void getTop10() {
+		System.out.println("Exercise 4:");
 		listSubj.stream().forEach(sj->{
 			List<StudentSubjectRegister> listSSR=listStudentSubjectRegister.stream()
 					.filter(ssr->ssr.getSubjectId()==sj.getSubjectId())
 					.sorted(Comparator.comparingDouble(StudentSubjectRegister::getScore))
 					.collect(Collectors.toList());
 			System.out.println("\n ---- Subject :"+sj.getSubjectName());
-			System.out.println(" ++ Top 10 student :");
-			listSSR.stream().limit(10).forEach(ssr->{
-				listSt.stream().filter(st->st.getStudentId()==ssr.getStudentId()).forEach(st->{
-					System.out.printf("%s -- ",st.getStudentName());
-				});
-				
+			System.out.println(" ++ Top 10 student : ");
+			listSt.stream()
+			.filter(st->listSSR.stream().anyMatch(ssr->ssr.getStudentId()==st.getStudentId()))
+			.skip(listSt.stream().filter(st->listSSR.stream().anyMatch(ssr->ssr.getStudentId()==st.getStudentId())).count()-10)
+			.forEach(st->{
+				System.out.printf("%s -- ",st.getStudentName());
 			});
 			System.out.println("\n ++ Bottom 10 student :");
-			listSSR.stream().skip(listSSR.size()<10?0:listSSR.size()-10).forEach(ssr->{
-				listSt.stream().filter(st->st.getStudentId()==ssr.getStudentId()).forEach(st->{
-					System.out.printf("%s -- ",st.getStudentName());
-				});
-				
+			listSt.stream()
+			.filter(st->listSSR.stream().anyMatch(ssr->ssr.getStudentId()==st.getStudentId()))
+			.limit(10)
+			.forEach(st->{
+				System.out.printf("%s -- ",st.getStudentName());
 			});
 		});
 	}
@@ -130,6 +133,7 @@ public class Process {
 	 * Exercise 5: Get class has max average mark by subject domain
 	 */
 	public static void getClassAvgMark() {
+		System.out.println("Exercise 5:");
 		Map<SubjectDomain, List<Subject>> mapSubject= listSubj.stream().collect(Collectors.groupingBy(Subject::getDomain));
 		mapSubject.entrySet().stream().forEach(e->{
 			ObjReturn obj=listCl.stream().map(cl->{
@@ -167,6 +171,7 @@ public class Process {
 	 * Exercise 6: Get subject domain has max average and subject domain has most student
 	 */
 	public static void getDomain() {
+		System.out.println("Exercise 6:");
 		Map<SubjectDomain, List<Subject>> mapSubject= listSubj.stream().collect(Collectors.groupingBy(Subject::getDomain));
 		listSc.stream().forEach(sc->{
 			List<Integer> listStudentId=new ArrayList<>();
@@ -225,10 +230,10 @@ public class Process {
 	}
 	
 	public static void main(String[] args) {
-		getAllStudent();
+//		getAllStudent();
 //		averageMark();
 //		getMaxAverage();
-//		getTop10();
+		getTop10();
 //		getClassAvgMark();
 //		getDomain();
 	}
